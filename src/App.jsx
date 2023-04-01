@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { TVShowAPI } from "./api/tv-show";
 import { TVShowDetail } from "./components/TVShowDetail/TVShowDetail";
 import { TVShowList } from "./components/TVShowList/TVShowList";
+import { TopTVShowList } from "./components/TopTVShowList/TopTVShowList";
 import s from "./style.module.css";
 import { BACKDROP_URL } from "./config";
 import { Logo } from "./components/Logo/Logo";
@@ -12,12 +13,24 @@ export function App(){
 
     const [currentTVShow, setCurrentTVShow] = useState();
     const [recommendationList, setRecommendationList] = useState([]);
+    const [topRatedTVShowList, setTopRatedTVShowList] = useState([]);
 
     async function fetchPopulars() {
         try {
             const popularTVShowList = await TVShowAPI.fetchPopulars();
             if (popularTVShowList.length > 0) {
                 setCurrentTVShow(popularTVShowList[0]);
+            }
+        } catch (error) {
+            alert(error);
+        }
+    }
+
+    async function fetchTopRated() {
+        try {
+            const topRatedTVShowListResp = await TVShowAPI.fetchTopRated();
+            if (topRatedTVShowListResp.length > 0) {
+                setTopRatedTVShowList(topRatedTVShowListResp.slice(0, 10));
             }
         } catch (error) {
             alert(error);
@@ -48,6 +61,10 @@ export function App(){
 
     useEffect(() => {
         fetchPopulars();
+    }, []);
+
+    useEffect(() => {
+        fetchTopRated();
     }, []);
 
     useEffect(() => {
@@ -86,6 +103,14 @@ export function App(){
              </div>
              <div className={s.tv_show_detail}>
                 {currentTVShow && <TVShowDetail tvShow={currentTVShow} />}
+            </div>
+            <div className={s.top_rated}>
+                {currentTVShow && (
+                        <TopTVShowList 
+                            onClickItem={updateCurrentTVShow}
+                            tvShowList={topRatedTVShowList} 
+                        />
+                    )}
             </div>
             <div className={s.recommended_shows}>
                 {currentTVShow && (

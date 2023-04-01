@@ -17,3 +17,7 @@
 .recommended_tv_shows {
     flex: 2;
 }
+
+.top_rated {
+    flex: 2;
+}

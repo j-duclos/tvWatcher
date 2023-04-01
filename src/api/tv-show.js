@@ -19,4 +19,10 @@ export class TVShowAPI {
         );
         return response.data.results;
     }
+
+    static async fetchTopRated(tvShowId) {
+        const response = await axios.get(`${BASE_URL}tv/top_rated${API_KEY}`);
+        return response.data.results;
+    }
+
 }
